@@ -33,7 +33,7 @@ def start():
             with urllib.request.urlopen(base + "/health", timeout=2) as response:
                 if response.status == 200:
                     return base
-        except (urllib.error.URLError, TimeoutError):
+        except (urllib.error.URLError, OSError):
             time.sleep(1)
     raise RuntimeError("Hister did not become healthy\n" + engine("logs", NAME))
 

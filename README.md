@@ -12,7 +12,7 @@ The repository is private, so your instance needs GitHub access to clone it. Ope
 
 ## Index your browsing history
 
-Install the upstream [Firefox or Chrome extension](https://hister.org/docs/browser-extension). Set its server URL to `https://hister.<your-instance-domain>` (use your deployed app name if different). Sign in to Cloud in a Bottle in the same browser, then save the extension settings to synchronize the server cookies. Leave the Hister access-token field empty. The extension uses your Cloud in a Bottle session; sign in again and resave settings when the session expires.
+Install the upstream [Firefox or Chrome extension](https://hister.org/docs/browser-extension). Set its server URL to `https://hister.<your-instance-domain>` (use your deployed app name if different) and save the settings. Sign in to Cloud in a Bottle in the same browser, then click the extension's Authenticate button to synchronize the server cookies. Leave the Hister access-token field empty. The extension uses your Cloud in a Bottle session; sign in again and click Authenticate when the session expires.
 
 You can also add content manually through Hister's Add page and import documents using the upstream CLI. For CLI or MCP clients, send a Cloud in a Bottle API token in the `Authorization: Bearer ...` header. Hister's `X-Access-Token` header alone does not authenticate with the platform. See the [upstream documentation](https://hister.org/docs) for queries, import formats, rules, previews, and integrations.
 
