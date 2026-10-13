@@ -27,3 +27,13 @@ Verified on 2026-10-13 using a freshly provisioned Hetzner instance running Clou
 Measured memory after the live search and reload tests was approximately 11 MiB at idle for the small fixture index. The 512 MiB allocation also passed the CI indexing and persistence test; larger collections and optional embedding workloads may need a higher allocation.
 
 The temporary test instance was torn down after verification. No personal instance was modified.
+
+## Signed-in Chrome extension regression
+
+The first live verification cleared browser cookies before testing the Authorization header. It missed the mixed-credential case where the owner is still signed in and the extension also sends a valid API bearer token.
+
+On 2026-10-13, the official Chrome Web Store extension v0.31.0 reproduced failed uploads on a deployed router based on commit `367a5eaf`. The popup saved the correct server URL, but a newly visited fixture page was not indexed. The router's cookie-first owner-auth check rejected the extension POST despite its valid API token.
+
+After applying the narrowly scoped auth backport `b04f9dbb`, the same browser test passed with the login cookie still present: the popup saved the server URL, the extension submitted a successful POST returning 201, and the newly visited page was indexed. The fixture document and temporary test session were removed afterward.
+
+[Platform PR 416](https://github.com/cloud-in-a-bottle/cloud-in-a-bottle/pull/416) contains the fix for main and HTTP/WebSocket regression coverage for valid, expired and absent cookies, along with invalid, expired and app-only bearer credentials. Extension validation should always include both a signed-in browser and the configured custom Authorization header.

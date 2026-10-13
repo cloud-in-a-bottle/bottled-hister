@@ -5,14 +5,24 @@ Packaging for [Hister](https://github.com/asciimoo/hister), a private full-text 
 ## Deploy
 
 ```sh
-bottle app deploy https://github.com/cloud-in-a-bottle/bottled-hister@andrew/package-hister --name hister --wait
+bottle app deploy https://github.com/cloud-in-a-bottle/bottled-hister --name hister --wait
 ```
 
 Open Hister from the instance dashboard. The signed-in owner goes straight to the search interface, with no separate Hister account or setup wizard. Guests are redirected to Cloud in a Bottle sign-in. Only the upstream `/health` endpoint is public.
 
 ## Index your browsing history
 
-Install the upstream [Firefox or Chrome extension](https://hister.org/docs/browser-extension). Set its server URL to `https://hister.<your-instance-domain>` (use your deployed app name if different). Create an API token in your Cloud in a Bottle dashboard, then add a custom header in the extension options: name `Authorization`, value `Bearer <your-platform-token>`. Leave the Hister access-token field empty and save the settings. Keep that platform token private: it grants access to your instance, not just Hister.
+Install the upstream [Firefox or Chrome extension](https://hister.org/docs/browser-extension). In Chrome, right-click the Hister extension icon and choose **Options** to open its full options page. The popup's Settings view has no custom-header fields.
+
+1. Set **Server URL** to `https://hister.<your-instance-domain>/`, including `https://` (use your deployed app name if different).
+2. Leave **Access Token** empty.
+3. Create an API token in your Cloud in a Bottle dashboard.
+4. Under **Custom Headers**, click **Add Header**. Set the name to `Authorization` and the value to `Bearer <your-platform-token>`.
+5. Click **Save**, visit a new page, then search for a phrase from it in Hister.
+
+Keep that platform token private: it grants access to your instance, not just Hister.
+
+The router must include the [API bearer and browser-cookie authentication fix](https://github.com/cloud-in-a-bottle/cloud-in-a-bottle/pull/416). Older routers can reject extension uploads when you are also signed in through the browser, even with the correct Authorization header. A non-JSON server-response error can indicate a missing URL scheme or a sign-in redirect; a saved URL alone does not verify page uploads.
 
 You can also add content manually through Hister's Add page. HTTP API and MCP clients authenticate using the same `Authorization: Bearer ...` platform-token header. For example, `bottle curl "https://hister.<your-instance-domain>/search?format=json&q=example"` sends your platform credentials automatically. The upstream Hister CLI uses `X-Access-Token`, which does not authenticate with the platform; use platform-authenticated HTTP requests for remote imports. See the [upstream documentation](https://hister.org/docs) for queries, API formats, rules, previews, and integrations.
 
