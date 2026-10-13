@@ -1,0 +1,20 @@
+[app]
+name = "hister"
+version = "0.1.0"
+description = "Private full-text search for your browsing history and documents"
+
+[runtime.container]
+image = "Dockerfile"
+port = 4433
+
+[routing]
+health_check = "/health"
+public_paths = ["/health"]
+
+[resources]
+memory_mb = 512
+build_memory_mb = 512
+cpu_cores = 1.0
+
+[data]
+app_data = true
