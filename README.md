@@ -14,15 +14,32 @@ Open Hister from the instance dashboard. The signed-in owner goes straight to th
 
 Install the upstream [Firefox or Chrome extension](https://hister.org/docs/browser-extension). In Chrome, right-click the Hister extension icon and choose **Options** to open its full options page. The popup's Settings view has no custom-header fields.
 
+You can also open the full Chrome options page directly by pasting this into the address bar:
+
+```text
+chrome-extension://cciilamhchpmbdnniabclekddabkifhb/options.html
+```
+
 1. Set **Server URL** to `https://hister.<your-instance-domain>/`, including `https://` (use your deployed app name if different).
 2. Leave **Access Token** empty.
 3. Create an API token in your Cloud in a Bottle dashboard.
-4. Under **Custom Headers**, click **Add Header**. Set the name to `Authorization` and the value to `Bearer <your-platform-token>`.
-5. Click **Save**, visit a new page, then search for a phrase from it in Hister.
+4. Under **Custom Headers**, click **Add Header** and fill in the two boxes exactly as follows:
+
+   | Box | Enter |
+   | --- | --- |
+   | Header name | `Authorization` |
+   | Header value | `Bearer <your-platform-token>` |
+
+   `Bearer` belongs at the beginning of the **value**, followed by one space and your token. It is not the header name. A token by itself in the value box is also incorrect. Keep the separate **Access Token** field empty.
+
+5. Click **Save Settings**, then visit or reload an ordinary external webpage and search for a phrase from it in Hister.
 
 Keep that platform token private: it grants access to your instance, not just Hister.
 
-The router must include the [API bearer and browser-cookie authentication fix](https://github.com/cloud-in-a-bottle/cloud-in-a-bottle/pull/416). Older routers can reject extension uploads when you are also signed in through the browser, even with the correct Authorization header. A non-JSON server-response error can indicate a missing URL scheme or a sign-in redirect; a saved URL alone does not verify page uploads.
+### Troubleshooting the extension
+
+- **“Server response is not valid JSON”**: confirm that the Server URL is the full Hister app URL, including `https://`, rather than the instance dashboard URL. A sign-in redirect can also return HTML instead of JSON; check the custom Authorization header above.
+- **“Failed to send page data to server”**: check that the header name is `Authorization` and the value starts with `Bearer `, including the space before the token. Save the settings and visit a new external webpage to trigger a fresh upload. The displayed error can be left over from the previous failed attempt; successfully saving the URL alone does not verify uploads.
 
 You can also add content manually through Hister's Add page. HTTP API and MCP clients authenticate using the same `Authorization: Bearer ...` platform-token header. For example, `bottle curl "https://hister.<your-instance-domain>/search?format=json&q=example"` sends your platform credentials automatically. The upstream Hister CLI uses `X-Access-Token`, which does not authenticate with the platform; use platform-authenticated HTTP requests for remote imports. See the [upstream documentation](https://hister.org/docs) for queries, API formats, rules, previews, and integrations.
 

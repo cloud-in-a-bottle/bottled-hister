@@ -36,4 +36,4 @@ On 2026-10-13, the official Chrome Web Store extension v0.31.0 reproduced failed
 
 After applying the narrowly scoped auth backport `b04f9dbb`, the same browser test passed with the login cookie still present: the popup saved the server URL, the extension submitted a successful POST returning 201, and the newly visited page was indexed. The fixture document and temporary test session were removed afterward.
 
-[Platform PR 416](https://github.com/cloud-in-a-bottle/cloud-in-a-bottle/pull/416) contains the fix for main and HTTP/WebSocket regression coverage for valid, expired and absent cookies, along with invalid, expired and app-only bearer credentials. Extension validation should always include both a signed-in browser and the configured custom Authorization header.
+HTTP/WebSocket regression coverage checks valid, expired and absent cookies, along with invalid, expired and app-only bearer credentials. Extension validation should always include both a signed-in browser and the configured custom Authorization header.
